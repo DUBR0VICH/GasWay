@@ -1,0 +1,61 @@
+{% extends "app/layout.html" %}
+{% block content %}
+{% if form != None %}
+    <br><h2>Форма обратной связи с разработчиком</h2><br>
+        <div>
+            <form method="post">
+                {% csrf_token %}
+                <label for="{{ form.name.id.for_label }}">{{ form.name.label }}:</label>
+                {{ form.name }}<br><br>
+                <label for="{{ form.internet.id.for_label }}">{{ form.internet.label }}:</label>
+                {{ form.internet }}<br><br>
+                <label for="{{ form.notice.id.for_label }}">{{ form.notice.label }}:</label>
+                {{ form.notice }}<br><br>
+                <label for="{{ form.email.id.for_label }}">{{ form.email.label }}:</label>
+                {{ form.email }}<br><br>
+                <label for="{{ form.message.id.for_label }}">{{ form.message.label }}:</label>
+                {{ form.message }}<br><br>
+                <button type="submit" class="save btn btn-default" id="submitBtn"> Отправить </button>
+            </form>
+        </div>
+{% else %}
+    <br><h2>Благодарим за фидбек!</h2>
+    <h3>Ваш репорт:</h3>
+    <u1>
+        <li><span>Никнейм:</span> {{ data.name }}</li>
+        <li><span>Тема обратной связи:</span> {{ data.internet }}</li>
+        <li><span>Получать новости о продуктах  на e-mail?:</span> {{ data.notice }}</li>
+        <li><span>Ваш e-mail:</span> {{ data.email }}</li>
+        <li><span>Поле для текста обратной связи:</span> {{ data.message }}</li>
+    </u1>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+    var submitBtn = document.getElementById('submitBtn');
+    submitBtn.style.backgroundColor = 'lightgray';
+    
+    $(document).ready(function() {
+        // Изменение цвета текста кнопки отправки формы при наведении
+        $('#submitBtn').mouseover(function() {
+            $(this).css('background-color', 'lightgreen');
+        });
+
+        // Возвращение исходного цвета текста кнопки отправки формы при уходе курсора
+        $('#submitBtn').mouseout(function() {
+            $(this).css('background-color', 'lightgray');
+        });
+
+        // Изменение цвета фона полей ввода при выборе для ввода
+        $('input').focus(function() {
+            $(this).css('background-color', 'lightgreen');
+        });
+
+        // Возвращение исходного цвета фона полей ввода при снятии выбора
+        $('input').blur(function() {
+            $(this).css('background-color', 'white');
+        });
+    });
+</script>
+{% endblock %}

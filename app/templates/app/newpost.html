@@ -1,0 +1,37 @@
+{% extends "app/layout.html" %}
+
+{% block content %}
+
+    <h3>Добавить статью</h3>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div>
+            {{blogform.as_p}}
+            <button type="submit" class="save btn btn=default" id="submitBtn"> Сохранить статью </button>
+        </div>
+    </form>
+
+
+<script>
+    document.querySelectorAll('h2').forEach(function(element) {
+        element.style.color = '#00C600'; // Устанавливаем цвет
+    });
+    document.querySelectorAll('p').forEach(function(element) {
+        element.style.color = '#A0ECA0'; // Устанавливаем цвет
+    });
+
+    var submitBtn = document.getElementById('submitBtn');
+    submitBtn.style.backgroundColor = 'lightgray';
+    $(document).ready(function() {
+        // Изменение цвета текста кнопки отправки формы при наведении
+        $('#submitBtn').mouseover(function() {
+            $(this).css('background-color', 'lightgreen');
+        });
+
+        // Возвращение исходного цвета текста кнопки отправки формы при уходе курсора
+        $('#submitBtn').mouseout(function() {
+            $(this).css('background-color', 'lightgray');
+        });
+    });
+</script>
+{% endblock %}

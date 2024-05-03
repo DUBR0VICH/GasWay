@@ -1,0 +1,26 @@
+{% extends "app/layout.html" %}
+
+{% block content %}
+
+<h1>{{ title }}.</h1>
+<hr />
+<div>
+    <h2>Видео-ролик 1</h2>
+    <video src="/media/video1.mp4" controls="controls" width="600" height="500" poster="/media/ak.jpg"></video>
+</div>
+<hr />
+<div>
+    <h2>Видео-ролик 2</h2>
+    <video src="/media/video2.mp4" controls="controls" width="600" height="500" poster="/media/ak.jpg"></video>
+</div>
+
+
+<script>
+    document.querySelectorAll('h2').forEach(function(element) {
+        element.style.color = '#00C600'; // Устанавливаем цвет
+    });
+    document.querySelectorAll('p').forEach(function(element) {
+        element.style.color = '#A0ECA0'; // Устанавливаем цвет
+    });
+</script>
+{% endblock %}

@@ -1,10 +1,9 @@
 {% extends "app/layout.html" %}
-
+{% load static %}
 
 {% block content %}
 <h2>{{ title }}.</h2>
 
-{% load staticfiles %}
     <ul>
         <li>Моя страница Вконтакте <a href ="https://vk.ru/dddubrovich" target="_blank"> <img src="{% static 'app/content/VK Logo.png' %}" alt="Logo 1"/></a></li>
         <li>Моя страница ArtStation <a href ="https://www.artstation.com/dubr0vich" target="_blank"> <img src="{% static 'app/content/artst Logo.png' %}" alt="Logo 2"/></a></li>

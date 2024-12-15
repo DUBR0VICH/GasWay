@@ -1,15 +1,17 @@
-﻿{% extends "app/layout.html" %}
+{% extends "app/layout.html" %}
 
 
 {% block content %}
 
-<h2>Корзина</h2>
+<h2>Удаление поста</h2>
+<p>Вы уверены, что хотите удалить пост "{{ post.title }}"?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Удалить</button>
+    <a href="{% url 'blog' %}">Отмена</a>
+</form>
 
-<ul>
-    {% for order in orders %}
-    <h2>{{ order.product.name }} - {{ order.quantity }}</h2>
-    {% endfor %}
-</ul>
+
 
 <script>
     document.querySelectorAll('h2').forEach(function(element) {

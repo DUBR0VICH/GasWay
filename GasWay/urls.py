@@ -21,6 +21,19 @@ urlpatterns = [
     path('newpost/', views.newpost, name='newpost'),
     path('videopost/', views.videopost, name='videopost'),
 
+    #new
+    path('my_orders/', views.my_orders, name='my_orders'),
+    path('manage_orders/', views.manage_orders, name='manage_orders'),
+    path('add_to_cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
+    path('manage_users/', views.manage_users, name='manage_users'),  # Новая страница для управления пользователями
+
+
+    path('edit_post/<int:post_id>/', views.edit_post, name='edit_post'),
+    path('delete_post/<int:post_id>/', views.delete_post, name='delete_post'),
+    path('add_product/', views.add_product, name='add_product'),
+    path('edit_product/<int:product_id>/', views.edit_product, name='edit_product'),
+    path('delete_product/<int:product_id>/', views.delete_product, name='delete_product'),
+
     path('login/',
          LoginView.as_view
          (

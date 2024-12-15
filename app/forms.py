@@ -7,8 +7,11 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import gettext_lazy as _
 
 from django.db import models
+from django.contrib.auth.models import User
 from .models import Comment
 from .models import Blog
+from .models import Order
+from .models import Product
 
 class BootstrapAuthenticationForm(AuthenticationForm):
     """Authentication form which uses boostrap CSS."""
@@ -43,3 +46,24 @@ class BlogForm(forms.ModelForm):
     class Meta:
         model = Blog
         fields = ('title', 'description', 'content', 'image',)
+
+
+# new
+class OrderForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ['product', 'quantity']
+
+class RoleAssignmentForm(forms.Form):
+    """Форма для назначения ролей пользователям."""
+    ROLE_CHOICES = [
+        ('Клиент', 'Клиент'),
+        ('Менеджер', 'Менеджер'),
+    ]
+    role = forms.ChoiceField(label='Назначить роль', choices=ROLE_CHOICES)
+
+#Класс продукта
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ['name', 'category', 'price', 'description']  # Поля для редактирования и добавления

@@ -1,13 +1,11 @@
-﻿{% extends "app/layout.html" %}
-
+{% extends "app/layout.html" %}
 
 {% block content %}
 
-<h2>Корзина</h2>
-
+<h2>Мои заказы</h2>
 <ul>
     {% for order in orders %}
-    <h2>{{ order.product.name }} - {{ order.quantity }}</h2>
+        <li>{{ order.product.name }} - {{ order.quantity }} ({{ order.status }})</li>
     {% endfor %}
 </ul>
 
@@ -15,7 +13,7 @@
     document.querySelectorAll('h2').forEach(function(element) {
         element.style.color = '#00C600'; // Устанавливаем цвет
     });
-    document.querySelectorAll('li').forEach(function(element) {
+    document.querySelectorAll('p').forEach(function(element) {
         element.style.color = '#A0ECA0'; // Устанавливаем цвет
     });
 </script>

@@ -1,0 +1,87 @@
+{% extends "app/layout.html" %}
+
+
+{% block content %}
+
+<h2>Управление пользователями</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <!-- Выбор пользователя -->
+    <div style="margin-bottom: 20px;">
+        <label for="user_id">Выберите пользователя:</label>
+        <select name="user_id" id="user_id" class="user-select" style="width: 100%;">
+            <option></option> <!-- Placeholder для select2 -->
+            {% for user in users %}
+                <option value="{{ user.id }}">{{ user.username }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Выбор роли -->
+    <div style="margin-bottom: 20px;">
+        <label for="role">Назначить роль:</label>
+        <select name="role" id="role" class="role-select" style="width: 100%;">
+            <option></option> <!-- Placeholder для select2 -->
+            <option value="Клиент">Клиент</option>
+            <option value="Менеджер">Менеджер</option>
+        </select>
+    </div>
+
+    <!-- Кнопка отправки -->
+    <button type="submit" style="width: 100%; padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; font-size: 16px;">
+        Назначить роль
+    </button>
+</form>
+
+<!-- Вывод сообщения -->
+{% if message %}
+    <div style="margin-top: 20px; padding: 10px; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 5px;">
+        {{ message }}
+    </div>
+{% endif %}
+
+
+<!-- Подключение jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- Подключение select2 CSS и JS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+<script>
+    document.querySelectorAll('h2').forEach(function(element) {
+        element.style.color = '#00C600'; // Устанавливаем цвет
+    });
+    document.querySelectorAll('li').forEach(function(element) {
+        element.style.color = '#A0ECA0'; // Устанавливаем цвет
+    });
+</script>
+
+<!-- Подключение select2 -->
+<script>
+    $(document).ready(function() {
+        // Инициализация select2 для пользователя
+        $('#user_id').select2({
+            placeholder: "Выберите пользователя",
+            allowClear: true
+        });
+
+        // Инициализация select2 для ролей
+        $('#role').select2({
+            placeholder: "Выберите роль",
+            allowClear: true
+        });
+    });
+</script>
+
+<style>
+    select.user-select {
+        width: 100%;  /* Задаём ширину на 100% */
+        padding: 8px; /* Удобные отступы */
+        font-size: 14px; /* Размер шрифта */
+    }
+</style>
+
+
+{% endblock %}

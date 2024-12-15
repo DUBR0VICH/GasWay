@@ -1,28 +1,41 @@
 {% extends "app/layout.html" %}
 {% block content %}
+
 <h2>{{post_1.title}}</h2>
 
 {% if post_1.image and post_1.image.url != '/media/temp.jpg' %}
-<img src="{{ post_1.image.url }}" alt=" Картинка статьи " width="200"/>
+<img src="{{ post_1.image.url }}" alt="Картинка статьи" width="200"/>
 {% endif %}
 
 <p>{{post_1.content|linebreaksbr}}</p>
-<p><a href="{% url 'blog' %}"> Вернуться на главную </a></p>
+
+<!-- Кнопки для редактирования и удаления поста -->
+{% if can_manage_post %}
+    <div style="margin-top: 20px;">
+        <a href="{% url 'edit_post' post_id=post_1.id %}" class="btn btn-warning" style="margin-right: 10px;">Редактировать пост</a>
+        <a href="{% url 'delete_post' post_id=post_1.id %}" class="btn btn-danger">Удалить пост</a>
+    </div>
+{% endif %}
+
+
+
+<p><a href="{% url 'blog' %}">Вернуться на главную</a></p>
+
+<!-- Комментарии -->
 {% if user.is_authenticated %}
     <h4 style="margin-top: 50px; margin-bottom: 20px;">Написать комментарий</h4>
     <form method="POST">
     {% csrf_token %}
     <div>
         {{form.as_p}}
-        <button type="submit" class="save btn btn-default" id="submitBtn" style="margin-bottom: 40px;"> Отправить </button>
+        <button type="submit" class="save btn btn-default" id="submitBtn" style="margin-bottom: 40px;">Отправить</button>
     </div>
     </form>
 {% else %}
- <h3> Для комментирования записи требуется авторизоваться </h3>
+ <h3>Для комментирования записи требуется авторизоваться</h3>
 {% endif %}
 
-
-<h4>Комментарии: </h4>
+<h4>Комментарии:</h4>
 {% for comment in comments %}
     <hr/>
     <h7>{{comment.date}}</h7>
@@ -30,12 +43,13 @@
     <p>{{comment.text|linebreaksbr}}</p>
 {% endfor %}
 
+<!-- Стилизация через JS -->
 <script>
     document.querySelectorAll('h2').forEach(function(element) {
-        element.style.color = '#00C600'; // Устанавливаем цвет
+        element.style.color = '#00C600';
     });
     document.querySelectorAll('p').forEach(function(element) {
-        element.style.color = '#A0ECA0'; // Устанавливаем цвет
+        element.style.color = '#A0ECA0';
     });
     document.querySelectorAll('h7').forEach(function(element) {
         element.style.fontSize = '13px';
@@ -52,29 +66,21 @@
         element.style.color = '#00C600';
     });
 
-
     var submitBtn = document.getElementById('submitBtn');
     submitBtn.style.backgroundColor = 'lightgray';
 
-    // Получаем элемент textarea по его id
     var textarea = document.getElementById('id_text');
-
-    // Устанавливаем новые значения ширины и высоты
     textarea.style.width = '300px';
     textarea.style.height = '50px';
 
-    
     $(document).ready(function() {
-        // Изменение цвета текста кнопки отправки формы при наведении
         $('#submitBtn').mouseover(function() {
             $(this).css('background-color', 'lightgreen');
         });
-
-        // Возвращение исходного цвета текста кнопки отправки формы при уходе курсора
         $('#submitBtn').mouseout(function() {
             $(this).css('background-color', 'lightgray');
         });
     });
-
 </script>
+
 {% endblock %}

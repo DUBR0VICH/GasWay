@@ -54,4 +54,21 @@
 
 </div>
 
+<div style="background-color: #111; padding: 20px; margin-top: 20px; border-radius: 8px;">
+    <h3 style="color: #267F00;">Gas Way - видеоигра, иммерсивный шутер, который базируется на параллельной вселенной, когда СССР смогла полностью изменить реальность.</h3>
+    <p style="font-size: 1.1em; color: #267F00;">На этом сайте продаётся внутриигровой контент, который может быть использован после выхода игры на площадках.</p>
+</div>
+
+<div style="background-color: #111; padding: 20px; margin-top: 20px; border-radius: 8px;">
+    <h3 style="color: #006400;">Последние новости</h3>
+    <ul style="list-style-type: none; padding-left: 0;">
+        {% for post in posts %}
+            <li style="background-color: #222; margin-bottom: 10px; padding: 10px; border-radius: 8px;">
+                <a href="{% url 'blogpost' parametr=post.id %}" style="font-size: 1.2em; color: #4570B3; text-decoration: none;">{{ post.title }}</a>
+                <p style="font-size: 1.1em; color: #888;">{{ post.description }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
 {% endblock %}

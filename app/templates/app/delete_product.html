@@ -1,0 +1,27 @@
+{% extends "app/layout.html" %}
+
+
+{% block content %}
+
+<h2>Удаление товара</h2>
+<p>Вы уверены, что хотите удалить товар "{{ product.name }}"?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Удалить</button>
+    <a href="{% url 'catalog' %}" class="btn btn-secondary">Отмена</a>
+</form>
+
+
+
+
+
+<script>
+    document.querySelectorAll('h2').forEach(function(element) {
+        element.style.color = '#00C600'; // Устанавливаем цвет
+    });
+    document.querySelectorAll('li').forEach(function(element) {
+        element.style.color = '#A0ECA0'; // Устанавливаем цвет
+    });
+</script>
+
+{% endblock %}

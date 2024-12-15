@@ -24,6 +24,7 @@ from .models import Product, Order
 from .forms import OrderForm, ProductForm
 from django.contrib.auth.models import User
 from .forms import RoleAssignmentForm
+from .models import CartItem
 
 
 
@@ -40,31 +41,7 @@ def home(request):
         }
     )
 
-def cart(request):
-    """Renders the cart page."""
-    assert isinstance(request, HttpRequest)
-    return render(
-        request,
-        'app/cart.html',
-        {
-            'title':'Корзина',
-            'message':'Корзина с вашими товарами',
-            'year':datetime.now().year,
-        }
-    )
 
-def catalog(request):
-    """Renders the catalog page."""
-    assert isinstance(request, HttpRequest)
-    return render(
-        request,
-        'app/catalog.html',
-        {
-            'title':'Каталог',
-            'message':'Каталог',
-            'year':datetime.now().year,
-        }
-    )
 
 def contact(request):
     """Renders the contact page."""
@@ -259,43 +236,83 @@ def catalog(request):
     )
 
 
+
+
+
 # Корзина клиента
 @login_required
-@user_passes_test(is_client, is_manager)
+@user_passes_test(is_client)
 def cart(request):
-    orders = Order.objects.filter(client=request.user, status='pending')
-    return render(request, 'app/cart.html', {'orders': orders})
+    cart_items = CartItem.objects.filter(client=request.user)
+    return render(request, 'app/cart.html', {'cart_items': cart_items})
 
-# История заказов клиента
-@login_required
-@user_passes_test(is_client, is_manager)
-def my_orders(request):
-    orders = Order.objects.filter(client=request.user)
-    return render(request, 'app/my_orders.html', {'orders': orders})
-
-# Управление заказами менеджером
-@login_required
-@user_passes_test(is_manager)
-def manage_orders(request):
-    orders = Order.objects.all()
-    return render(request, 'app/manage_orders.html', {'orders': orders})
 
 # Добавление товара в корзину
 @login_required
-@user_passes_test(is_client, is_manager)
+@user_passes_test(is_client)
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    if request.method == 'POST':
-        form = OrderForm(request.POST)
-        if form.is_valid():
-            order = form.save(commit=False)
-            order.client = request.user
-            order.status = 'pending'
-            order.save()
-            return redirect('cart')
-    else:
-        form = OrderForm(initial={'product': product})
-    return render(request, 'app/add_to_cart.html', {'form': form, 'product': product})
+
+    # Проверяем, есть ли этот товар в корзине
+    cart_item, created = CartItem.objects.get_or_create(client=request.user, product=product)
+    if not created:
+        # Если товар уже в корзине, увеличиваем количество
+        cart_item.quantity += 1
+    cart_item.save()
+
+    return redirect('cart')
+
+# Редактирование количества товаров
+@login_required
+@user_passes_test(is_client)
+def update_cart(request, cart_item_id):
+    cart_item = get_object_or_404(CartItem, id=cart_item_id, client=request.user)
+    if request.method == "POST":
+        quantity = int(request.POST.get("quantity", 1))
+        if quantity > 0:
+            cart_item.quantity = quantity
+            cart_item.save()
+        else:
+            cart_item.delete()  # Если количество стало 0, удаляем товар из корзины
+    return redirect('cart')
+
+
+# Удаление товаров из корзины
+@login_required
+@user_passes_test(is_client)
+def remove_from_cart(request, cart_item_id):
+    cart_item = get_object_or_404(CartItem, id=cart_item_id, client=request.user)
+    cart_item.delete()
+    return redirect('cart')
+
+
+# Создание заказа
+@login_required
+@user_passes_test(is_client)
+def create_order(request):
+    cart_items = CartItem.objects.filter(client=request.user)
+    if cart_items.exists():
+        for item in cart_items:
+            Order.objects.create(
+                client=request.user,
+                product=item.product,
+                quantity=item.quantity,
+                status='pending'
+            )
+        cart_items.delete()  # Очищаем корзину после создания заказа
+    return redirect('my_orders')
+
+# Отображение заказов
+@login_required
+@user_passes_test(is_client)
+def my_orders(request):
+    orders = Order.objects.filter(client=request.user).order_by('-id')
+    return render(request, 'app/my_orders.html', {'orders': orders})
+
+
+
+
+
 
 # Изменение ролей пользователей
 @login_required
@@ -400,3 +417,41 @@ def delete_product(request, product_id):
         product.delete()
         return redirect('catalog')
     return render(request, 'app/delete_product.html', {'product': product})
+
+
+
+
+
+# Управление заказами пользователей
+@login_required
+@user_passes_test(lambda u: u.is_superuser or is_manager(u))
+def manage_order_status(request):
+    users = User.objects.all()  # Все пользователи
+    orders = None  # Изначально заказы не отображаются
+    message = None  # Сообщение о выполнении действия
+
+    # Если отправлена форма
+    if request.method == "POST":
+        user_id = request.POST.get("user_id")
+        order_id = request.POST.get("order_id")
+        new_status = request.POST.get("status")
+
+        if user_id and order_id and new_status:
+            try:
+                # Находим заказ
+                order = Order.objects.get(id=order_id, client_id=user_id)
+                order.status = new_status  # Меняем состояние
+                order.save()
+                message = f"Статус заказа №{order.id} успешно изменён на '{order.get_status_display()}'."
+            except Order.DoesNotExist:
+                message = "Выбранный заказ не найден."
+
+        # Загружаем заказы для выбранного пользователя
+        if user_id:
+            orders = Order.objects.filter(client_id=user_id)
+
+    return render(request, 'app/manage_order_status.html', {
+        'users': users,
+        'orders': orders,
+        'message': message,
+    })

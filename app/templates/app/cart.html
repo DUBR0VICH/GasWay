@@ -2,20 +2,33 @@
 
 
 {% block content %}
-
 <h2>Корзина</h2>
 
+{% if cart_items %}
 <ul>
-    {% for order in orders %}
-    <h2>{{ order.product.name }} - {{ order.quantity }}</h2>
+    {% for item in cart_items %}
+    <li>
+        <h3>{{ item.product.name }} - {{ item.product.price }} руб. x {{ item.quantity }}</h3>
+        <form method="post" action="{% url 'update_cart' cart_item_id=item.id %}">
+            {% csrf_token %}
+            <input type="number" name="quantity" value="{{ item.quantity }}" min="1">
+            <button type="submit">Обновить</button>
+        </form>
+        <a href="{% url 'remove_from_cart' cart_item_id=item.id %}">Удалить</a>
+    </li>
     {% endfor %}
 </ul>
 
+<a href="{% url 'create_order' %}" class="btn btn-success">Оформить заказ</a>
+{% else %}
+<p>Ваша корзина пуста.</p>
+{% endif %}
+
 <script>
-    document.querySelectorAll('h2').forEach(function(element) {
+    document.querySelectorAll('h2').forEach(function (element) {
         element.style.color = '#00C600'; // Устанавливаем цвет
     });
-    document.querySelectorAll('li').forEach(function(element) {
+    document.querySelectorAll('li').forEach(function (element) {
         element.style.color = '#A0ECA0'; // Устанавливаем цвет
     });
 </script>

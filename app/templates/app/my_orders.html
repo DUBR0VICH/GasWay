@@ -1,13 +1,19 @@
 {% extends "app/layout.html" %}
 
 {% block content %}
-
 <h2>Мои заказы</h2>
+
+{% if orders %}
 <ul>
     {% for order in orders %}
-        <li>{{ order.product.name }} - {{ order.quantity }} ({{ order.status }})</li>
+        <li>
+            <h3>{{ order.product.name }} - {{ order.quantity }} шт. ({{ order.get_status_display }})</h3>
+        </li>
     {% endfor %}
 </ul>
+{% else %}
+<p>У вас ещё нет заказов.</p>
+{% endif %}
 
 <script>
     document.querySelectorAll('h2').forEach(function(element) {

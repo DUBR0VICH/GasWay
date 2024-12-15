@@ -22,10 +22,14 @@ urlpatterns = [
     path('videopost/', views.videopost, name='videopost'),
 
     #new
-    path('my_orders/', views.my_orders, name='my_orders'),
-    path('manage_orders/', views.manage_orders, name='manage_orders'),
     path('add_to_cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
+    path('update_cart/<int:cart_item_id>/', views.update_cart, name='update_cart'),
+    path('remove_from_cart/<int:cart_item_id>/', views.remove_from_cart, name='remove_from_cart'),
+    path('create_order/', views.create_order, name='create_order'),
+    path('my_orders/', views.my_orders, name='my_orders'),
     path('manage_users/', views.manage_users, name='manage_users'),  # Новая страница для управления пользователями
+    path('manage_order_status/', views.manage_order_status, name='manage_order_status'), # Новая страница для управления заказами
+
 
 
     path('edit_post/<int:post_id>/', views.edit_post, name='edit_post'),

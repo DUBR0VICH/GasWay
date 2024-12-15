@@ -1,0 +1,62 @@
+{% extends "app/layout.html" %}
+
+{% block content %}
+
+<h2>Управление заказами</h2>
+
+<!-- Сообщение о выполнении действия -->
+{% if message %}
+    <div style="margin-bottom: 20px; color: green;">{{ message }}</div>
+{% endif %}
+
+<!-- Выбор пользователя -->
+<form method="post">
+    {% csrf_token %}
+    <label for="user_id">Выберите пользователя:</label>
+    <select name="user_id" id="user_id" class="form-select" style="width: 100%; margin-bottom: 20px;">
+        <option value="" selected>Выберите пользователя</option>
+        {% for user in users %}
+            <option value="{{ user.id }}" {% if user.id|stringformat:"s" == request.POST.user_id %}selected{% endif %}>
+                {{ user.username }}
+            </option>
+        {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-primary" style="margin-bottom: 20px;">Показать заказы</button>
+</form>
+
+<!-- Если заказы выбраны -->
+{% if orders %}
+    <h3>Заказы пользователя</h3>
+    <ul>
+        {% for order in orders %}
+            <li>
+                <strong>Заказ №{{ order.id }}</strong> - {{ order.product.name }} ({{ order.quantity }} шт.)
+                <br>
+                Статус: <strong>{{ order.get_status_display }}</strong>
+                <form method="post" style="margin-top: 10px;">
+                    {% csrf_token %}
+                    <input type="hidden" name="user_id" value="{{ order.client.id }}">
+                    <input type="hidden" name="order_id" value="{{ order.id }}">
+                    <label for="status">Изменить статус:</label>
+                    <select name="status" id="status" class="form-select" style="width: 200px; display: inline-block;">
+                        <option value="pending" {% if order.status == 'pending' %}selected{% endif %}>Ожидание</option>
+                        <option value="completed" {% if order.status == 'completed' %}selected{% endif %}>Завершено</option>
+                    </select>
+                    <button type="submit" class="btn btn-success">Изменить</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+
+<script>
+    document.querySelectorAll('h2').forEach(function(element) {
+        element.style.color = '#00C600'; // Устанавливаем цвет
+    });
+    document.querySelectorAll('p').forEach(function(element) {
+        element.style.color = '#A0ECA0'; // Устанавливаем цвет
+    });
+</script>
+
+{% endblock %}

@@ -81,3 +81,12 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order {self.id} by {self.client.username}"
+
+# Модель связки корзины с клиентом
+class CartItem(models.Model):
+    client = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Клиент")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Товар")
+    quantity = models.PositiveIntegerField(default=1, verbose_name="Количество")
+
+    def __str__(self):
+        return f"{self.quantity} x {self.product.name} для {self.client.username}"

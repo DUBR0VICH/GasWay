@@ -58,20 +58,30 @@ admin.site.register(Comment)
 
 # new
 class Category(models.Model):
-    name = models.CharField(max_length=100)
-    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100, verbose_name="Название категории")
+    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, verbose_name="Родительская категория")
 
     def __str__(self):
         return self.name
+
+    def get_children(self):
+        return Category.objects.filter(parent=self)
+
+    class Meta:
+        verbose_name = "Категория"
+        verbose_name_plural = "Категории"
+
 
 class Product(models.Model):
-    name = models.CharField(max_length=100)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    description = models.TextField()
+    name = models.CharField(max_length=100, verbose_name="Название товара")
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Категория")
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена")
+    description = models.TextField(verbose_name="Описание товара")
+    image = models.ImageField(upload_to='products/', blank=True, null=True, verbose_name="Изображение товара")
 
     def __str__(self):
         return self.name
+
 
 class Order(models.Model):
     client = models.ForeignKey(User, on_delete=models.CASCADE)

@@ -31,6 +31,10 @@ urlpatterns = [
     path('manage_order_status/', views.manage_order_status, name='manage_order_status'), # Новая страница для управления заказами
 
 
+    path('catalog/', views.catalog, name='catalog'),
+    path('catalog/<int:category_id>/', views.catalog, name='catalog_category'), # Маршруты для каталога
+
+
 
     path('edit_post/<int:post_id>/', views.edit_post, name='edit_post'),
     path('delete_post/<int:post_id>/', views.delete_post, name='delete_post'),

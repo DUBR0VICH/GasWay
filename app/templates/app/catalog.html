@@ -4,29 +4,43 @@
 
 <h2>Каталог внутриигрового контента</h2>
 
-<!-- Кнопка для добавления нового товара -->
-{% if can_manage_catalog %}
-    <a href="{% url 'add_product' %}" class="btn btn-success" style="margin-bottom: 20px;">Добавить товар</a>
+<!-- Список категорий -->
+{% if subcategories %}
+    <h3>Категории</h3>
+    <ul>
+        {% for category in subcategories %}
+            <li>
+                <a href="{% url 'catalog_category' category.id %}">{{ category.name }}</a>
+            </li>
+        {% endfor %}
+    </ul>
 {% endif %}
 
-<ul>
-    {% for product in products %}
-        <li>
-            <h2>
-                {{ product.name }} - {{ product.price }} руб.
-                {% if user.is_authenticated %}
-                    <a href="{% url 'add_to_cart' product.id %}" style="margin-left: 10px;">Добавить в корзину</a>
-                {% endif %}
-                
-                <!-- Кнопки управления товаром -->
-                {% if can_manage_catalog %}
-                    <a href="{% url 'edit_product' product_id=product.id %}" class="btn btn-warning" style="margin-left: 10px;">Редактировать</a>
-                    <a href="{% url 'delete_product' product_id=product.id %}" class="btn btn-danger" style="margin-left: 10px;">Удалить</a>
-                {% endif %}
-            </h2>
-        </li>
-    {% endfor %}
-</ul>
+<!-- Товары в выбранной категории -->
+{% if selected_category %}
+    <h3>Товары в категории: {{ selected_category.name }}</h3>
+    {% if products %}
+        <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+            {% for product in products %}
+                <div style="border: 1px solid #ccc; padding: 10px; width: 200px;">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 100%; height: auto;">
+                    {% else %}
+                        <img src="/static/default_product.jpg" alt="Нет изображения" style="width: 100%; height: auto;">
+                    {% endif %}
+                    <h4>{{ product.name }}</h4>
+                    <p>{{ product.price }} руб.</p>
+                    <p>{{ product.description }}</p>
+                    {% if not user.is_superuser and not is_manager %}
+                    <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary">Добавить в корзину</a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>В этой категории пока нет товаров.</p>
+    {% endif %}
+{% endif %}
 
 
 <script>

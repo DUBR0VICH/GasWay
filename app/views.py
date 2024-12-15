@@ -25,6 +25,7 @@ from .forms import OrderForm, ProductForm
 from django.contrib.auth.models import User
 from .forms import RoleAssignmentForm
 from .models import CartItem
+from .models import Category
 
 
 
@@ -218,22 +219,28 @@ def is_client(user):
     return user.groups.filter(name='Клиент').exists()
 
 # Каталог товаров
-def catalog(request):
-    products = Product.objects.all()
-
-    # Проверка, может ли пользователь управлять каталогом
-    can_manage_catalog = request.user.is_authenticated and (
-        request.user.is_superuser or request.user.groups.filter(name="Менеджер").exists()
-    )
+def catalog(request, category_id=None):
+    # Если категория выбрана, показываем её товары
+    if category_id:
+        selected_category = get_object_or_404(Category, id=category_id)
+        products = Product.objects.filter(category=selected_category)
+        subcategories = selected_category.get_children()
+    else:
+        # Корневые категории (без родителя)
+        selected_category = None
+        products = None
+        subcategories = Category.objects.filter(parent=None)
 
     return render(
         request,
         'app/catalog.html',
         {
+            'selected_category': selected_category,
             'products': products,
-            'can_manage_catalog': can_manage_catalog,  # Передаём в шаблон
+            'subcategories': subcategories,
         }
     )
+
 
 
 

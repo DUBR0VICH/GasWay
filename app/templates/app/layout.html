@@ -45,7 +45,7 @@
                         <li><a href="{% url 'manage_users' %}">Управление пользователями</a></li>
                     {% endif %}
                     {% if user.is_superuser or is_manager %}
-                        <li><a href="{% url 'manage_order_status' %}">Управление заказами</a></li>
+                        <li><a href="{% url 'manage_order_status' %}">Заказы</a></li>
                     {% endif %}
                 </ul>
                 {% include 'app/loginpartial.html' %}

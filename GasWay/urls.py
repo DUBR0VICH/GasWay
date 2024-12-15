@@ -14,8 +14,8 @@ from django.conf import settings
 
 urlpatterns = [
     path('', views.home, name='home'),
-    path('contact/', views.contact, name='contact'),
-    path('about/', views.about, name='about'),
+    path('cart/', views.cart, name='cart'),
+    path('catalog/', views.catalog, name='catalog'),
     path('blog/', views.blog, name='blog'),
     path('blogpost/<int:parametr>/', views.blogpost, name='blogpost'),
     path('newpost/', views.newpost, name='newpost'),
@@ -35,7 +35,7 @@ urlpatterns = [
          name='login'),
     path('logout/', LogoutView.as_view(next_page='/'), name='logout'),
     path('admin/', admin.site.urls),
-    path('links/', views.links, name='links'),
+    path('contact/', views.contact, name='contact'),
     path('anketa/', views.anketa, name='anketa'),
     path('registration/', views. registration, name= 'registration'),
 ]

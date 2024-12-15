@@ -31,11 +31,11 @@
                 <ul class="nav navbar-nav">
                     <li><a href="{% url 'home' %}">GasWay</a></li>
                     <li><a href="{% url 'blog' %}">Новости</a></li>
-                    <li><a href="{% url 'about' %}">Описание</a></li>
+                    <li><a href="{% url 'catalog' %}">Каталог</a></li>
                     <li><a href="{% url 'contact' %}">Контакты</a></li>
-                    <li><a href="{% url 'links' %}">Полезные ресурсы</a></li>
                     <li><a href="{% url 'anketa' %}">Обратная связь</a></li>
                     <li><a href="{% url 'videopost' %}">Видео</a></li>
+                    <li><a href="{% url 'cart' %}">Корзина</a></li>
                     {% if user.is_superuser %}
                         <li><a href="{% url 'newpost' %}"> Добавить статью </a></li>
                     {% endif %}

@@ -28,6 +28,32 @@ def home(request):
         }
     )
 
+def cart(request):
+    """Renders the cart page."""
+    assert isinstance(request, HttpRequest)
+    return render(
+        request,
+        'app/cart.html',
+        {
+            'title':'Корзина',
+            'message':'Корзина с вашими товарами',
+            'year':datetime.now().year,
+        }
+    )
+
+def catalog(request):
+    """Renders the catalog page."""
+    assert isinstance(request, HttpRequest)
+    return render(
+        request,
+        'app/catalog.html',
+        {
+            'title':'Каталог',
+            'message':'Страница с каталогом товаров',
+            'year':datetime.now().year,
+        }
+    )
+
 def contact(request):
     """Renders the contact page."""
     assert isinstance(request, HttpRequest)
@@ -35,33 +61,7 @@ def contact(request):
         request,
         'app/contact.html',
         {
-            'title':'Общение',
-            'message':'Ваша страница',
-            'year':datetime.now().year,
-        }
-    )
-
-def about(request):
-    """Renders the about page."""
-    assert isinstance(request, HttpRequest)
-    return render(
-        request,
-        'app/about.html',
-        {
-            'title':'Описание',
-            'message':'Страница с описанием',
-            'year':datetime.now().year,
-        }
-    )
-
-def links(request):
-    """Renders the links page."""
-    assert isinstance(request, HttpRequest)
-    return render(
-        request,
-        'app/links.html',
-        {
-            'title':'Полезные ресурсы',
+            'title':'Контакты',
             'year':datetime.now().year,
         }
     )

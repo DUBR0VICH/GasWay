@@ -1,9 +1,13 @@
-﻿{% extends "app/layout.html" %}
-
+{% extends "app/layout.html" %}
+{% load static %}
 
 {% block content %}
+<h2>{{ title }}</h2>
 
-<h2>{{ title }}.</h2>
+    <ul>
+        <li>Моя страница Вконтакте <a href ="https://vk.ru/dddubrovich" target="_blank"> <img src="{% static 'app/content/VK Logo.png' %}" alt="Logo 1"/></a></li>
+        <li>Моя страница ArtStation <a href ="https://www.artstation.com/dubr0vich" target="_blank"> <img src="{% static 'app/content/artst Logo.png' %}" alt="Logo 2"/></a></li>
+    </ul>
 
 <script>
     document.querySelectorAll('h2').forEach(function(element) {
@@ -13,5 +17,4 @@
         element.style.color = '#A0ECA0'; // Устанавливаем цвет
     });
 </script>
-
 {% endblock %}
